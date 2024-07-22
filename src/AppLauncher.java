@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 public class AppLauncher {
     public static void main(String[] args) {
-        // use invokeLater to make updates to the GUI more thread-safe
+        // используйте invokeLater чтобы сделать обновления графического интерфейса более потокобезопасными
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

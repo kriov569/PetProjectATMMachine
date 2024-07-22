@@ -1,7 +1,7 @@
 package db_objs;
 
 /*
-    Transaction entity used to store transaction data
+    Сущность транзакции, используемой для хранения данных транзакции
  */
 
 import java.math.BigDecimal;

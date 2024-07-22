@@ -1,7 +1,7 @@
 package guis;
 
 /*
-    Displays a custom dialog for our BankingAppGui
+    Отображает настраиваемое диалоговое окно для нашего BankingAppGui.
  */
 
 import db_objs.MyJDBC;
@@ -25,47 +25,46 @@ public class BankingAppDialog extends JDialog implements ActionListener {
     private ArrayList<Transaction> pastTransactions;
 
     public BankingAppDialog(BankingAppGui bankingAppGui, User user) {
-        // set the size
+        // установить размер
         setSize(400, 400);
 
-        // add focus to the dialog (can't interact with anything else until dialog is closed)
+        // добавить фокус в диалог (невозможно взаимодействовать ни с чем, пока диалог не будет закрыт)
         setModal(true);
 
-        // loads in teh center of our banking gui
         setLocationRelativeTo(bankingAppGui);
 
-        // when suer closes dialog, it releases its resources that are being used
+        // когда пользователь закрывает диалог, он освобождает используемые ресурсы
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        // prevents dialog from being resized
+        // предотвращает изменение размера диалога
         setResizable((false));
 
-        // allows us to manually specify the size and position of each component
+        // позволяет нам вручную указать размер и положение каждого компонента
         setLayout(null);
 
-        // we will need reference to our gui so that we can update the current balance
+        // понадобится ссылка на графический интерфейс, чтобы обновить текущий баланс
         this.bankingAppGui = bankingAppGui;
 
-        // we will need access to the user info to make updates to our db or retrieve auto about the user
+        // понадобится доступ к информации о пользователе, чтобы обновлять базу данных или автоматически получать сведения о пользователе.
         this.user = user;
     }
 
     public void addCurrentBalanceAndAmount() {
-        // balance label
+        // метка баланса
         balanceLabel = new JLabel("Balance: $" + user.getCurrentBalance());
         balanceLabel.setBounds(0, 10, getWidth() - 20, 20);
         balanceLabel.setFont(new Font("Dialog", Font.BOLD, 16));
         balanceLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(balanceLabel);
 
-        // enter amount label
+        // введите метку суммы
         enterAmountLabel = new JLabel("Enter Amount:");
         enterAmountLabel.setBounds(0, 50, getWidth() - 20, 20);
         enterAmountLabel.setFont(new Font("Dialog", Font.BOLD, 16));
         enterAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(enterAmountLabel);
 
-        // enter amount field
+        // введите поле суммы
         enterAmountField = new JTextField();
         enterAmountField.setBounds(15, 80, getWidth() - 50, 40);
         enterAmountField.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -82,14 +81,14 @@ public class BankingAppDialog extends JDialog implements ActionListener {
     }
 
     public void addUserField() {
-        // enter user label
+        // введите ярлык пользователя
         enterUserLabel = new JLabel("Enter User:");
         enterUserLabel.setBounds(0, 160, getWidth() - 20, 20);
         enterUserLabel.setFont(new Font("Dialog", Font.BOLD, 16));
         enterUserLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(enterUserLabel);
 
-        // enter user field
+        // введите пользовательское поле
         enterUserField = new JTextField();
         enterUserField.setBounds(15, 190, getWidth() - 50, 40);
         enterUserField.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -98,59 +97,59 @@ public class BankingAppDialog extends JDialog implements ActionListener {
     }
 
     public void addPastTransactionComponents() {
-        // container where we will store each transaction
+        // контейнер, в котором мы будем хранить каждую транзакцию
         pastTransactionPanel = new JPanel();
 
-        // make layout 1x1
+        // сделать макет 1х1
         pastTransactionPanel.setLayout(new BoxLayout(pastTransactionPanel, BoxLayout.Y_AXIS));
 
-        // add scrollability to the container
+        // добавить возможность прокрутки в контейнер
         JScrollPane scrollPane = new JScrollPane(pastTransactionPanel);
 
-        // displays the vertical scroll only when it is required
+        // отображает вертикальную прокрутку только тогда, когда это необходимо
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBounds(0, 20, getWidth() -15, getHeight() - 15);
 
-        // perform db call to retrieve all of the past transaction and store into array list
+        // выполнить вызов базы данных, чтобы получить все прошлые транзакции и сохранить их в списке массивов
         pastTransactions = MyJDBC.getPastTransaction(user);
 
-        // iterate through the list and add to the gui
+        // перебрать список и добавить в графический интерфейс
         for (int i = 0; i < pastTransactions.size(); i++) {
-            // store current transaction
+            // сохранить текущую транзакцию
             Transaction pastTransaction = pastTransactions.get(i);
 
-            // create a container to story an individual transaction
+            // создать контейнер для истории отдельной транзакции
             JPanel pastTransactionContainer =new JPanel();
             pastTransactionContainer.setLayout(new BorderLayout());
 
-            // create transaction type label
+            // создать метку типа транзакции
             JLabel transactionTypeLabel =  new JLabel(pastTransaction.getTransactionType());
             transactionTypeLabel.setFont(new Font("Dialog", Font.BOLD, 20));
 
-            // create transaction amount label
+            // создать метку суммы транзакции
             JLabel transactionAmountLabel = new JLabel(String.valueOf(pastTransaction.getTransactionAmount()));
             transactionAmountLabel.setFont(new Font("Dialog", Font.BOLD, 20));
 
-            // create transaction date label
+            // создать метку даты транзакции
             JLabel transactionDateLabel = new JLabel(String.valueOf(pastTransaction.getTransactionDate()));
             transactionDateLabel.setFont(new Font("Dialog", Font.BOLD, 20));
 
-            // add to the container
+            // добавить в контейнер
             pastTransactionContainer.add(transactionTypeLabel, BorderLayout.WEST); // place this on the west side
             pastTransactionContainer.add(transactionAmountLabel, BorderLayout.EAST); // place this on the east side
             pastTransactionContainer.add(transactionDateLabel, BorderLayout.SOUTH); // place this on the south side
 
-            // give a while background to each container
+            // дать временный фон каждому контейнеру
             pastTransactionContainer.setBackground(Color.WHITE);
 
-            // give a block border to each transaction container
+            // задать границу блока для каждого контейнера транзакции
             pastTransactionContainer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-            // add transaction component to the transaction panel
+            // добавить компонент транзакции на панель транзакций
             pastTransactionPanel.add(pastTransactionContainer);
         }
 
-        // add to the dialog
+        // добавить в диалог
         add(scrollPane);
     }
 
@@ -158,59 +157,59 @@ public class BankingAppDialog extends JDialog implements ActionListener {
         Transaction transaction;
 
         if (transactionType.equalsIgnoreCase("Deposit")) {
-            // deposit transaction type
-            // add to current balance
+            // тип депозитной операции
+            // добавить к текущему балансу
             user.setCurrentBalance(user.getCurrentBalance().add(new BigDecimal(amountVal)));
 
-            // create transaction
-            // we leave date null because we are going to be using the NOW() in sql which will get the current date
+            // создать транзакцию
+            // оставляем дату нулевой, для использования NOW() в sql, который получит текущую дату
             transaction = new Transaction(user.getId(), transactionType, new BigDecimal(amountVal), null);
         } else {
-            // withdraw transaction type
-            // subtract from current balance
+            // тип транзакции вывода
+            // вычесть из текущего баланса
             user.setCurrentBalance(user.getCurrentBalance().subtract(new BigDecimal(amountVal)));
 
-            // we want to show a negative sign for the amount vol when withdrawing
+            // показывает отрицательный знак для суммы vol при выводе
             transaction = new Transaction(user.getId(), transactionType, new BigDecimal(amountVal), null);
         }
 
-        // update database
+        // обновление базы данных
         if (MyJDBC.addTransactionToDatabase(transaction) && MyJDBC.updateCurrentBalance(user)) {
-            // show sources dialog
+            // показать диалог источников
             JOptionPane.showMessageDialog(this, transactionType + " Successfully!");
 
-            // reset the fields
+            // сбросить поля
             resetFieldsAndUpdateCurrentBalance();
         } else {
-            // show failure dialog
+            // показать диалог сбоя
             JOptionPane.showMessageDialog(this, transactionType + " Failed...");
         }
     }
 
     private void resetFieldsAndUpdateCurrentBalance() {
-        // reset fields
+        // Очистить поля
         enterAmountField.setText("");
 
-        // only appears when transfer is clicked
+        // появляется только при нажатии кнопки «Перевести»
         if (enterUserField != null) {
             enterUserField.setText("");
         }
 
-        // update current balance on dialog
+        // обновить текущий баланс в диалоговом окне
         balanceLabel.setText("Balance: $" + user.getCurrentBalance());
 
-        // update current balance on main gui
+        // обновить текущий баланс в главном интерфейсе
         bankingAppGui.getCurrentBalanceField().setText("$" + user.getCurrentBalance());
     }
 
     private void handleTransfer(User user, String transferredUser, float amount) {
-        // attempt to the perform transfer
+        // попытка выполнить перевод
         if (MyJDBC.transfer(user, transferredUser, amount)) {
-            // show success dialog
+            // показать диалог успеха
             JOptionPane.showMessageDialog(this, "Transfer Success!");
             resetFieldsAndUpdateCurrentBalance();
         } else {
-            // show failure dialog
+            // показать диалог сбоя
             JOptionPane.showMessageDialog(this, "Transfer Failed...");
         }
     }
@@ -219,34 +218,34 @@ public class BankingAppDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String buttonPressed = e.getActionCommand();
 
-        // get amount val
+        // получить сумму val
         float amountVal = Float.parseFloat(enterAmountField.getText());
 
-        // pressed deposit
+        // прессованный депозит
         if (buttonPressed.equalsIgnoreCase("Deposit")) {
-            // we want to handle the deposit transaction
+            // обработка депозитной транзакции
             handleTransaction(buttonPressed, amountVal);
         } else {
-            // pressed withdraw or transfer
+            // нажал вывод или перевод
 
-            // validate input by making sure that withdraw or transfer amount is less than current balance
-            // if result is -1 it means that the entered amount is more, 0 means they are equal, and 1 means that
-            // the entered amount is less
+            // подтвердите ввод, убедившись, что сумма вывода или перевода меньше текущего баланса
+            // если результат равен -1, это означает, что введенная сумма больше, 0 означает, что они равны, а 1 означает, что
+            // введенная сумма меньше
             int result = user.getCurrentBalance().compareTo(BigDecimal.valueOf(amountVal));
             if (result < 0) {
-                // display error dialog
+                // отобразить диалоговое окно ошибки
                 JOptionPane.showMessageDialog(this, "Error: input value is more than current balance");
                 return;
             }
 
-            // check to see withdraw or transfer was pressed
+            // проверьте, была ли нажата кнопка вывода или перевода
             if (buttonPressed.equalsIgnoreCase("Withdraw")) {
                 handleTransaction(buttonPressed, amountVal);
             } else {
-                // transfer
+                // перевод
                 String transferredUser = enterUserField.getText();
 
-                // handle transfer
+                // обрабатывать перевод
                 handleTransfer(user, transferredUser, amountVal);
             }
         }

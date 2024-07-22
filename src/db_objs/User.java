@@ -1,7 +1,7 @@
 package db_objs;
 
 /*
-    User entity which is used to store used information (i.e. id, username, password, and current balance)
+    Объект пользователя, который используется для хранения используемой информации (т.е. идентификатора, имени пользователя, пароля и текущего баланса).
  */
 
 import java.math.BigDecimal;
@@ -36,7 +36,7 @@ public class User {
     }
 
     public void setCurrentBalance(BigDecimal newBalance) {
-        // store new value to the 2nd decimal place
+        // сохранить новое значение до 2-го десятичного знака
         currentBalance = newBalance.setScale(2, RoundingMode.FLOOR);
     }
 }

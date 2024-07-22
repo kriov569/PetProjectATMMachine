@@ -1,7 +1,7 @@
 package db_objs;
 
 /*
-    The JDBC class is used to interact with a MySQL database to perform actions such as executing and updating the database.
+    Класс JDBC используется для взаимодействия с базой данных MySQL для выполнения таких действий, как выполнение и обновление базы данных.
  */
 
 import java.math.BigDecimal;
@@ -9,42 +9,42 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class MyJDBC {
-    // database configuration
+    // конфигурация базы данных
     private static final String DB_URL = "jdbc:mysql://localhost:3306/bankapp";
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "password";
 
-    // if valid, return an object with user information
+    // если допустимо, вернуть объект с информацией о пользователе
     public static User validateLogin(String username, String password) {
         try {
-            // establish a connection to the database using configuration
+            // установить соединение с базой данных с помощью конфигурации
             Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 
-            // create sql query
+            // создать sql-запрос
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "SELECT * FROM users WHERE username = ? AND password = ?"
             );
 
-            // replace the ? with values
-            // parameter index referring to the iteration of the ? so 1 is the first ? and 2 is the second ?
+            // заменить ?
+            // индекс параметра, относящийся к итерации ? так 1 первый ? а 2 это второй ?
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
 
-            // execute query and stare into a result set
+            // выполнить запрос и посмотреть на набор результатов
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // next() return true or false
-            // true - query returned data and result set now points to the first row
-            // false - query returned no data and result set equals to null
+            // next() возвращает true или false
+            // true — возвращаемые данные запроса и набор результатов теперь указывают на первую строку
+            // false — запрос не вернул данные, а набор результатов равен нулю
             if (resultSet.next()) {
-                // success
-                // get id
+                // успех
+                // получить идентификатор
                 int userId = resultSet.getInt("id");
 
-                // get current balance
+                // получить текущий баланс
                 BigDecimal currentBalance = resultSet.getBigDecimal("current_balance");
 
-                // return user object
+                // вернуть пользовательский объект
                 return new User(userId, username, password, currentBalance);
             }
 
@@ -52,16 +52,16 @@ public class MyJDBC {
             e.printStackTrace();
         }
 
-        // not valid user
+        // недействительный пользователь
         return null;
     }
 
-    // registers new user to the database
-    // true - register success
-    // false - register fails
+    // регистрирует нового пользователя в базе данных
+    // true – регистрациия удалась
+    // false — регистрация не удалась
     public static boolean register(String username, String password) {
         try {
-            // first we will need to check uf the username has already been taken
+            // сначала нам нужно будет проверить, занято ли уже имя пользователя
             if (checkUser(username)) {
                 Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 
@@ -83,9 +83,9 @@ public class MyJDBC {
 
         return false;
     }
-    // check if username already exists in the db
-    // true - user exists
-    // false - user doesn't exist
+    // проверяем, существует ли имя пользователя в базе данных
+    // true — пользователь существует
+    // false — пользователь не существует
     private static boolean checkUser(String username) {
         try {
             Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
@@ -97,7 +97,7 @@ public class MyJDBC {
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // this means that the query returned no data meaning that the username is available
+            // это означает, что запрос не вернул данных, что означает, что имя пользователя доступно.
             if (resultSet.next()) {
                 return false;
             }
@@ -107,8 +107,8 @@ public class MyJDBC {
         return true;
     }
 
-    // true - update to db was a success
-    // false - update to the db was a fall
+    // true — обновление базы данных прошло успешно
+    // false - обновление базы данных не прошла
     public static boolean addTransactionToDatabase(Transaction transaction) {
         try {
             Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
@@ -117,14 +117,14 @@ public class MyJDBC {
                     "INSERT transactions(user_id, transaction_type, transaction_amount, transaction_date) " +
                             "VALUES(?, ?, ?, NOW())"
             );
-            //NOW() will put in the current date
+            // NOW() вставит текущую дату
 
             insertTransaction.setInt(1, transaction.getUserId());
             insertTransaction.setString(2, transaction.getTransactionType());
             insertTransaction.setBigDecimal(3, transaction.getTransactionAmount());
 
 
-            // update database
+            // обновление базы данных
             insertTransaction.executeUpdate();
 
             return true;
@@ -136,8 +136,8 @@ public class MyJDBC {
         return false;
     }
 
-    // true - update balance successful
-    // false - update balance fall
+    // true – обновление баланса выполнено успешно
+    // false — обновления баланса не вышло
     public static boolean updateCurrentBalance(User user) {
         try {
             Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
@@ -160,8 +160,8 @@ public class MyJDBC {
         return false;
     }
 
-    // true - transfer was a success
-    // false - transfer was a fail
+    // true - передача прошла успешно
+    // false — передача не удалась
     public static boolean transfer(User user, String transferredUsername, float transferAmount) {
         try {
             Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
@@ -174,7 +174,7 @@ public class MyJDBC {
             ResultSet resultSet = queryUser.executeQuery();
 
             while (resultSet.next()) {
-                // perform transfer
+                // выполнить перевод
                 User transferredUser = new User(
                         resultSet.getInt("id"),
                         transferredUsername,
@@ -182,7 +182,7 @@ public class MyJDBC {
                         resultSet.getBigDecimal("current_balance")
                 );
 
-                // create transaction
+                // создать транзакцию
                 Transaction transferTransaction = new Transaction(
                         user.getId(),
                         "Transfer",
@@ -190,7 +190,7 @@ public class MyJDBC {
                         null
                 );
 
-                // this transaction will belong to the transferred user
+                // эта транзакция будет принадлежать переданному пользователю
                 Transaction receivedTransaction = new Transaction(
                         transferredUser.getId(),
                         "Transfer",
@@ -198,15 +198,15 @@ public class MyJDBC {
                         null
                 );
 
-                // update transfer user
+                // обновить пользователя перевода
                 transferredUser.setCurrentBalance(transferredUser.getCurrentBalance().add(BigDecimal.valueOf(transferAmount)));
                 updateCurrentBalance(transferredUser);
 
-                // update user current balance
+                // обновить текущий баланс пользователя
                 user.setCurrentBalance(user.getCurrentBalance().subtract(BigDecimal.valueOf(transferAmount)));
                 updateCurrentBalance(user);
 
-                // add these transaction to the database
+                // добавить эти транзакции в базу данных
                 addTransactionToDatabase(transferTransaction);
                 addTransactionToDatabase(receivedTransaction);
 
@@ -219,7 +219,7 @@ public class MyJDBC {
         return false;
     }
 
-    // get all transactions (used for past transaction)
+    // получить все транзакции (используется для прошлой транзакции)
     public static ArrayList<Transaction> getPastTransaction(User user) {
         ArrayList<Transaction> pastTransactions = new ArrayList<>();
         try {
@@ -232,9 +232,9 @@ public class MyJDBC {
 
             ResultSet resultSet = selectAllTransaction.executeQuery();
 
-            // iterate through the results (if any)
+            // перебирать результаты (если есть)
             while (resultSet.next()) {
-                // create transaction obj
+                // создать объект транзакции
                 Transaction transaction = new Transaction(
                         user.getId(),
                         resultSet.getString("transaction_type"),
@@ -242,7 +242,7 @@ public class MyJDBC {
                         resultSet.getDate("transaction_date")
                 );
 
-                // store into array list
+                // сохранить в список массивов
                 pastTransactions.add(transaction);
             }
         } catch (SQLException e) {

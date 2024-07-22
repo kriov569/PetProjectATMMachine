@@ -8,8 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /*
-    Performs banking functions such as depositing, withdrawing, seeing past transaction, and transferring
-    This extends from the BaseFrame which means we will need to define our own addGuiComponent
+    Выполняет банковские функции, такие как внесение депозита, снятие средств, просмотр прошлых транзакций и перевод.
+    Это выходит из BaseFrame, что означает, что нам нужно будет определить наш собственный addGuiComponent.
  */
 public class BankingAppGui extends BaseFrame implements ActionListener {
     private JTextField currentBalanceField;
@@ -20,7 +20,7 @@ public class BankingAppGui extends BaseFrame implements ActionListener {
     }
     @Override
     protected void addGuiComponents() {
-        // create welcome message
+        // создать приветственное сообщение
         String welcomeMessage = "<html>" +
                 "<body style = 'text-align:center'>" +
                 "<b>Hello " + user.getUsername() + "</b><br>" +
@@ -31,14 +31,14 @@ public class BankingAppGui extends BaseFrame implements ActionListener {
         welcomeMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(welcomeMessageLabel);
 
-        // create current balance label
+        // создать метку текущего баланса
         JLabel currentBalanceLabel = new JLabel("Current Balance");
         currentBalanceLabel.setBounds(0, 80, getWidth() - 10, 30);
         currentBalanceLabel.setFont(new Font("Dialog", Font.BOLD, 22));
         currentBalanceLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(currentBalanceLabel);
 
-        // create current balance field
+        // создать поле текущего баланса
         currentBalanceField = new JTextField("$" + user.getCurrentBalance());
         currentBalanceField.setBounds(15, 120, getWidth() - 50, 40);
         currentBalanceField.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -46,35 +46,35 @@ public class BankingAppGui extends BaseFrame implements ActionListener {
         currentBalanceField.setEditable(false);
         add(currentBalanceField);
 
-        // deposit button
+        // кнопка депозита
         JButton depositButton = new JButton("Deposit");
         depositButton.setBounds(15, 180, getWidth() - 50, 50);
         depositButton.setFont(new Font("Dialog", Font.BOLD, 22));
         depositButton.addActionListener(this);
         add(depositButton);
 
-        // withdraw button
+        // кнопка вывода средств
         JButton withdrawButton = new JButton("Withdraw");
         withdrawButton.setBounds(15, 250, getWidth() - 50, 50);
         withdrawButton.setFont(new Font("Dialog", Font.BOLD, 22));
         withdrawButton.addActionListener(this);
         add(withdrawButton);
 
-        // past transaction button
+        // кнопка прошлых транзакции
         JButton pastTransactionButton = new JButton("Past Transaction");
         pastTransactionButton.setBounds(15, 320, getWidth() - 50, 50);
         pastTransactionButton.setFont(new Font("Dialog", Font.BOLD, 22));
         pastTransactionButton.addActionListener(this);
         add(pastTransactionButton);
 
-        // transfer button
+        // кнопка перевода
         JButton transferButton = new JButton("Transfer");
         transferButton.setBounds(15, 390, getWidth() - 50, 50);
         transferButton.setFont(new Font("Dialog", Font.BOLD, 22));
         transferButton.addActionListener(this);
         add(transferButton);
 
-        // logout button
+        // кнопка выхода
         JButton logoutButton = new JButton("Logout");
         logoutButton.setBounds(15, 500, getWidth() - 50, 50);
         logoutButton.setFont(new Font("Dialog", Font.BOLD, 22));
@@ -87,34 +87,33 @@ public class BankingAppGui extends BaseFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String buttonPressed = e.getActionCommand();
 
-        // user pressed logout
+        // пользователь нажал выход
         if (buttonPressed.equalsIgnoreCase("Logout")) {
-            // return user the login gui
+            // вернуть пользователю графический интерфейс входа в систему
             new LoginGui().setVisible(true);
 
-            // dispose of the gui
+            // убрать графический интерфейс
             this.dispose();
 
-            // don't bother running the rest of the code
             return;
         }
 
-        // other functions
+        // другие функции
         BankingAppDialog bankingAppDialog = new BankingAppDialog(this, user);
 
-        // set the title of the dialog header to the action
+        // установления заголовка диалога для действия
         bankingAppDialog.setTitle(buttonPressed);
 
-        // if the button pressed is deposit, withdraw, or transfer
+        // если нажата кнопка – это депозит, вывод средств или перевод
         if (buttonPressed.equalsIgnoreCase("Deposit") || buttonPressed.equalsIgnoreCase("Withdraw")
                 || buttonPressed.equalsIgnoreCase("Transfer")) {
-            // add in the current balance and amount gui components to the dialog
+            // добавить в диалоговое окно компоненты текущего баланса и суммы графического интерфейса
             bankingAppDialog.addCurrentBalanceAndAmount();
 
-            // add action button
+            // добавить кнопку действия
             bankingAppDialog.addActionButton(buttonPressed);
 
-            // for the transfer action it will require more components
+            // для передаточного действия потребуется больше компонентов
             if (buttonPressed.equalsIgnoreCase("Transfer")) {
                 bankingAppDialog.addUserField();
             }
@@ -123,7 +122,7 @@ public class BankingAppGui extends BaseFrame implements ActionListener {
             bankingAppDialog.addPastTransactionComponents();
         }
 
-        // make the app dialog visible
+        // сделать диалог приложения видимым
         bankingAppDialog.setVisible(true);
     }
 }
